@@ -1,0 +1,10 @@
+# IDE
+*.idea*
+*.iml
+
+# Ignore directory so users have somewhere to create their custom overlay.
+overlays/custom
+
+*.crt
+*.key
+*.p12
