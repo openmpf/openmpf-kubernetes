@@ -1,0 +1,68 @@
+#############################################################################
+# NOTICE                                                                    #
+#                                                                           #
+# This software (or technical data) was produced for the U.S. Government    #
+# under contract, and is subject to the Rights in Data-General Clause       #
+# 52.227-14, Alt. IV (DEC 2007).                                            #
+#                                                                           #
+# Copyright 2022 The MITRE Corporation. All Rights Reserved.                #
+#############################################################################
+
+#############################################################################
+# Copyright 2022 The MITRE Corporation                                      #
+#                                                                           #
+# Licensed under the Apache License, Version 2.0 (the "License");           #
+# you may not use this file except in compliance with the License.          #
+# You may obtain a copy of the License at                                   #
+#                                                                           #
+#    http://www.apache.org/licenses/LICENSE-2.0                             #
+#                                                                           #
+# Unless required by applicable law or agreed to in writing, software       #
+# distributed under the License is distributed on an "AS IS" BASIS,         #
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  #
+# See the License for the specific language governing permissions and       #
+# limitations under the License.                                            #
+#############################################################################
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - ../../optional/db
+  - ../../optional/azure-form-detection
+  - ../../optional/azure-ocr-text-detection
+  - ../../optional/azure-read-text-detection
+  - ../../optional/azure-speech-detection
+  - ../../optional/azure-translation
+  - ../../optional/east-text-detection
+  - ../../optional/keyword-tagging
+  - ../../optional/markup
+  - ../../optional/mog-motion-detection
+  - ../../optional/nlp-text-correction
+  - ../../optional/oalpr-license-plate-text-detection
+  - ../../optional/ocv-dnn-detection
+  - ../../optional/ocv-face-detection
+  - ../../optional/ocv-yolo-detection
+  - ../../optional/ocv-yolo-detection-server
+  - ../../optional/scene-change-detection
+  - ../../optional/sphinx-speech-detection
+  - ../../optional/subsense-motion-detection
+  - ../../optional/tesseract-ocr-text-detection
+  - ../../optional/tika-image-detection
+  - ../../optional/tika-text-detection
+  - ../../optional/trtis-detection
+  - ../../optional/trtis-detection-server
+
+
+configMapGenerator:
+  - name: mpf-image-config
+    literals:
+      - registry=openmpf
+      - tag=latest
+    options:
+      labels:
+        config.kubernetes.io/local-config: "true"
+
+transformers:
+  - ../../optional/configure-all-mpf-images
