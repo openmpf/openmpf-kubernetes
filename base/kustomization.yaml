@@ -30,7 +30,6 @@ kind: Kustomization
 resources:
   - openmpf-shared-data-persistentvolumeclaim.yaml
   - workflow-manager.yaml
-  - activemq.yaml
   - redis.yaml
 
 secretGenerator:

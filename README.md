@@ -338,22 +338,42 @@ Local Deployment in Minikube
 During development, it may be useful to test locally using
 [minikube](https://minikube.sigs.k8s.io/).
 
-- Start minikube: `minikube start`
-- If you are using image from a registry that requires authentication or are
-  stored locally, run: `minikube image load <image-name>` for each image you
-  are using.
-- Apply your overlay with `kubectl apply -k local`.
-- Run `kubectl logs services/workflow-manager -f` to follow Workflow Manager's
-  logs to see when it is done starting up.
-- Run `kubectl port-forward service/workflow-manager 8080:8080`
-- In a browser, go to `http://localhost:8080/workflow-manager`
+To start minikube:
+```bash
+minikube start
+```
+
+If you are using an image from a registry that requires authentication or are
+  stored locally, run the following for each image you need: 
+```bash
+minikube image load <image-name>
+```
+
+To apply your overlay (run in the `overlays` folder):
+```bash
+kubectl apply -k local
+```
+
+To view Workflow Manager's logs and see when it is done starting up:
+```bash
+kubectl logs services/workflow-manager -f
+```
+To locally enable port forwarding of the workflow-manager's service:
+```bash
+kubectl port-forward service/workflow-manager 8080:8080
+```
+
+To connect to the workflow-manager, open a browser and navigate to:
+```bash
+http://localhost:8080/workflow-manager
+```
 
 To stop and retain data run:
-```bash
-kubectl delete -k local -l '!persistent'
-```
+  ```bash
+  kubectl delete -k local -l '!persistent'
+  ```
 
 To stop and delete all data run:
-```bash
-kubectl delete -k local
-```
+  ```bash
+  kubectl delete -k local
+  ```

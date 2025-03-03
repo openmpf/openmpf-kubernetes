@@ -85,6 +85,9 @@ spec:
     - name: http
       port: 8080
       targetPort: 8080
+    - name: openwire
+      port: 61616
+      targetPort: 61616
   selector:
     app: workflow-manager
     stack: openmpf

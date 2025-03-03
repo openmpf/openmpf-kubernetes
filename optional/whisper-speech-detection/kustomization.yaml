@@ -5,11 +5,11 @@
 # under contract, and is subject to the Rights in Data-General Clause       #
 # 52.227-14, Alt. IV (DEC 2007).                                            #
 #                                                                           #
-# Copyright 2022 The MITRE Corporation. All Rights Reserved.                #
+# Copyright 2025 The MITRE Corporation. All Rights Reserved.                #
 #############################################################################
 
 #############################################################################
-# Copyright 2022 The MITRE Corporation                                      #
+# Copyright 2025 The MITRE Corporation                                      #
 #                                                                           #
 # Licensed under the Apache License, Version 2.0 (the "License");           #
 # you may not use this file except in compliance with the License.          #
@@ -28,46 +28,24 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - ../../base
-  - ../../optional/db
-  - ../../optional/argos-translation
-  - ../../optional/azure-form-detection
-  - ../../optional/azure-ocr-text-detection
-  - ../../optional/azure-read-text-detection
-  - ../../optional/azure-speech-detection
-  - ../../optional/azure-translation
-  - ../../optional/clip-detection
-  - ../../optional/clip-detection-server
-  - ../../optional/east-text-detection
-  - ../../optional/keyword-tagging
-  - ../../optional/markup
-  - ../../optional/mog-motion-detection
-  - ../../optional/nlp-text-correction
-  - ../../optional/oalpr-license-plate-text-detection
-  - ../../optional/ocv-dnn-detection
-  - ../../optional/ocv-face-detection
-  - ../../optional/ocv-yolo-detection
-  - ../../optional/ocv-yolo-detection-server
-  - ../../optional/scene-change-detection
-  - ../../optional/sphinx-speech-detection
-  - ../../optional/subsense-motion-detection
-  - ../../optional/tesseract-ocr-text-detection
-  - ../../optional/tika-image-detection
-  - ../../optional/tika-text-detection
-  - ../../optional/transformer-tagging
-  - ../../optional/trtis-detection
-  - ../../optional/trtis-detection-server
-  - ../../optional/whisper-speech-detection
+  - ../mpf-component-template
 
+commonLabels:
+  app: whisper-speech-detection
 
-configMapGenerator:
-  - name: mpf-image-config
-    literals:
-      - registry=openmpf
-      - tag=latest
-    options:
-      labels:
-        config.kubernetes.io/local-config: "true"
+images:
+  - name: component_template_img
+    newName: openmpf_whisper_speech_detection
 
-transformers:
-  - ../../optional/configure-all-mpf-images
+patches:
+  - target:
+      kind: Deployment
+      name: component-template
+    patch: |-
+      - op: replace
+        path: /metadata/name
+        value: whisper-speech-detection
+      - op: replace
+        path: /spec/template/spec/containers/0/name
+        value: whisper-speech-detection
+

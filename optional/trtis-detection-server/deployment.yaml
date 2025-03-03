@@ -52,9 +52,15 @@ spec:
             - --model-store=/models
           env:
             # Use "NVIDIA_VISIBLE_DEVICES=" (no value) for CPU mode.
-            # Set to "all" to use all available GPUs.
+            # Set to "all" to use all available GPUs
             - name: NVIDIA_VISIBLE_DEVICES
               value: ""
+          resources:
+            # Set to a non-zero value if GPUs are required
+            requests:
+              nvidia.com/gpu: 0
+            limits:
+              nvidia.com/gpu: 0
 ---
 apiVersion: v1
 kind: Service

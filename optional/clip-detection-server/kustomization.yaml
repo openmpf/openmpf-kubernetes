@@ -28,46 +28,4 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - ../../base
-  - ../../optional/db
-  - ../../optional/argos-translation
-  - ../../optional/azure-form-detection
-  - ../../optional/azure-ocr-text-detection
-  - ../../optional/azure-read-text-detection
-  - ../../optional/azure-speech-detection
-  - ../../optional/azure-translation
-  - ../../optional/clip-detection
-  - ../../optional/clip-detection-server
-  - ../../optional/east-text-detection
-  - ../../optional/keyword-tagging
-  - ../../optional/markup
-  - ../../optional/mog-motion-detection
-  - ../../optional/nlp-text-correction
-  - ../../optional/oalpr-license-plate-text-detection
-  - ../../optional/ocv-dnn-detection
-  - ../../optional/ocv-face-detection
-  - ../../optional/ocv-yolo-detection
-  - ../../optional/ocv-yolo-detection-server
-  - ../../optional/scene-change-detection
-  - ../../optional/sphinx-speech-detection
-  - ../../optional/subsense-motion-detection
-  - ../../optional/tesseract-ocr-text-detection
-  - ../../optional/tika-image-detection
-  - ../../optional/tika-text-detection
-  - ../../optional/transformer-tagging
-  - ../../optional/trtis-detection
-  - ../../optional/trtis-detection-server
-  - ../../optional/whisper-speech-detection
-
-
-configMapGenerator:
-  - name: mpf-image-config
-    literals:
-      - registry=openmpf
-      - tag=latest
-    options:
-      labels:
-        config.kubernetes.io/local-config: "true"
-
-transformers:
-  - ../../optional/configure-all-mpf-images
+  - deployment.yaml

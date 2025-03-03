@@ -5,11 +5,11 @@
 # under contract, and is subject to the Rights in Data-General Clause       #
 # 52.227-14, Alt. IV (DEC 2007).                                            #
 #                                                                           #
-# Copyright 2022 The MITRE Corporation. All Rights Reserved.                #
+# Copyright 2025 The MITRE Corporation. All Rights Reserved.                #
 #############################################################################
 
 #############################################################################
-# Copyright 2022 The MITRE Corporation                                      #
+# Copyright 2025 The MITRE Corporation                                      #
 #                                                                           #
 # Licensed under the Apache License, Version 2.0 (the "License");           #
 # you may not use this file except in compliance with the License.          #
@@ -27,32 +27,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ocv-yolo-detection-server
+  name: clip-detection-server
   labels:
-    app: ocv-yolo-detection-server
+    app: clip-detection-server
     stack: openmpf
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app:  ocv-yolo-detection-server
+      app:  clip-detection-server
       stack: openmpf
   template:
     metadata:
       labels:
-        app: ocv-yolo-detection-server
+        app: clip-detection-server
         stack: openmpf
     spec:
       containers:
-        - name: ocv-yolo-detection-server
-          image: openmpf_ocv_yolo_detection_server
+        - name: clip-detection-server
+          image: openmpf_clip_detection_server
           imagePullPolicy: IfNotPresent
           args:
             - tritonserver
             - --model-repository=/models
             - --strict-model-config=false
             - --model-control-mode=explicit
-            - --load-model=yolo-608
+            - --load-model=vit_l_14
             # - --log-verbose=1 # (optional)
             - --grpc-infer-allocation-pool-size=16
           env:
@@ -60,28 +60,24 @@ spec:
             # At least one GPU is required to run the YOLO TensorRT engine.
             - name: NVIDIA_VISIBLE_DEVICES
               value: all
-            - name: LD_PRELOAD
-              value: /plugins/libyolo608layerplugin.so
           volumeMounts:
             - mountPath: /models
-              name: yolo-engine-files
-          resources:
-            requests:
-              nvidia.com/gpu: 1
-            limits:
-              nvidia.com/gpu: 1
+              name: clip-engine-files
+          # resources:
+          #   limits:
+          #     nvidia.com/gpu: 1
       volumes:
-        - name: yolo-engine-files
+        - name: clip-engine-files
           persistentVolumeClaim:
-            claimName: yolo-engine-files
+            claimName: clip-engine-files
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: ocv-yolo-detection-server
+    app: clip-detection-server
     stack: openmpf
-  name: ocv-yolo-detection-server
+  name: clip-detection-server
 spec:
   ports:
     - name: grpc
@@ -95,13 +91,13 @@ spec:
       port: 8002
       targetPort: 8002
   selector:
-    app: ocv-yolo-detection-server
+    app: clip-detection-server
     stack: openmpf
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: yolo-engine-files
+  name: clip-engine-files
   labels:
     stack: openmpf
     persistent: "true"
