@@ -57,7 +57,7 @@ spec:
             - --grpc-infer-allocation-pool-size=16
           env:
             # Optionally, limit the GPUs exposed to the server.
-            # At least one GPU is required to run the YOLO TensorRT engine.
+            # At least four GPU is required to run the YOLO TensorRT engine.
             - name: NVIDIA_VISIBLE_DEVICES
               value: all
             - name: LD_PRELOAD
@@ -67,9 +67,9 @@ spec:
               name: yolo-engine-files
           resources:
             requests:
-              nvidia.com/gpu: 1
+              nvidia.com/gpu: 4
             limits:
-              nvidia.com/gpu: 1
+              nvidia.com/gpu: 4
       volumes:
         - name: yolo-engine-files
           persistentVolumeClaim:
