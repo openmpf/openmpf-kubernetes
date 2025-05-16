@@ -30,8 +30,10 @@ kind: Kustomization
 resources:
   - ../mpf-component-template
 
-commonLabels:
-  app: east-text-detection
+labels:
+- includeSelectors: true
+  pairs:
+    app: east-text-detection
 
 images:
   - name: component_template_img

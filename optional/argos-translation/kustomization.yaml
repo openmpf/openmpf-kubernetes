@@ -30,8 +30,10 @@ kind: Kustomization
 resources:
   - ../mpf-component-template
 
-commonLabels:
-  app: argos-translation
+labels:
+- includeSelectors: true
+  pairs:
+    app: argos-translation
 
 images:
   - name: component_template_img

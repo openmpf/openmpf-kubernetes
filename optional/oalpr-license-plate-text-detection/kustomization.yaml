@@ -30,8 +30,10 @@ kind: Kustomization
 resources:
   - ../mpf-component-template
 
-commonLabels:
-  app: oalpr-license-plate-text-detection
+labels:
+- includeSelectors: true
+  pairs:
+    app: oalpr-license-plate-text-detection
 
 images:
   - name: component_template_img

@@ -30,8 +30,10 @@ kind: Kustomization
 resources:
   - ../mpf-component-template
 
-commonLabels:
-  app: azure-form-detection
+labels:
+- includeSelectors: true
+  pairs:
+    app: azure-form-detection
 
 patches:
   - target:

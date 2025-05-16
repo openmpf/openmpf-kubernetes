@@ -30,8 +30,10 @@ kind: Kustomization
 resources:
   - ../mpf-component-template
 
-commonLabels:
-  app: keyword-tagging
+labels:
+- includeSelectors: true
+  pairs:
+    app: keyword-tagging
 
 images:
   - name: component_template_img

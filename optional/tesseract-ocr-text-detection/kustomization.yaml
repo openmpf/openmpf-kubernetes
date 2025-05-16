@@ -30,8 +30,10 @@ kind: Kustomization
 resources:
   - ../mpf-component-template
 
-commonLabels:
-  app: tesseract-ocr-text-detection
+labels:
+- includeSelectors: true
+  pairs:
+    app: tesseract-ocr-text-detection
 
 images:
   - name: component_template_img

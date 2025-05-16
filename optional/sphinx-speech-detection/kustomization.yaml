@@ -30,8 +30,10 @@ kind: Kustomization
 resources:
   - ../mpf-component-template
 
-commonLabels:
-  app: sphinx-speech-detection
+labels:
+- includeSelectors: true
+  pairs:
+    app: sphinx-speech-detection
 
 images:
   - name: component_template_img

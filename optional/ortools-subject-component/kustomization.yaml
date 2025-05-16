@@ -30,8 +30,10 @@ kind: Kustomization
 resources:
   - ../mpf-component-template
 
-commonLabels:
-  app: ortools-subject-component
+labels:
+- includeSelectors: true
+  pairs:
+    app: ortools-subject-component
 
 images:
   - name: component_template_img

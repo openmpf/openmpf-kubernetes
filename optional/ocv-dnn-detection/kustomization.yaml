@@ -30,8 +30,10 @@ kind: Kustomization
 resources:
   - ../mpf-component-template
 
-commonLabels:
-  app: ocv-dnn-detection
+labels:
+- includeSelectors: true
+  pairs:
+    app: ocv-dnn-detection
 
 images:
   - name: component_template_img

@@ -30,8 +30,10 @@ kind: Kustomization
 resources:
   - ../mpf-component-template
 
-commonLabels:
-  app: tika-image-detection
+labels:
+- includeSelectors: true
+  pairs:
+    app: tika-image-detection
 
 images:
   - name: component_template_img

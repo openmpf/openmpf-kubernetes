@@ -30,8 +30,10 @@ kind: Kustomization
 resources:
   - ../mpf-component-template
 
-commonLabels:
-  app: ocv-yolo-detection
+labels:
+- includeSelectors: true
+  pairs:
+    app: ocv-yolo-detection
 
 patches:
   - target:

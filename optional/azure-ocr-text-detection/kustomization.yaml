@@ -30,8 +30,10 @@ kind: Kustomization
 resources:
   - ../mpf-component-template
 
-commonLabels:
-  app: azure-ocr-text-detection
+labels:
+- includeSelectors: true
+  pairs:
+    app: azure-ocr-text-detection
 
 images:
   - name: component_template_img

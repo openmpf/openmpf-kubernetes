@@ -30,8 +30,10 @@ kind: Kustomization
 resources:
   - ../mpf-component-template
 
-commonLabels:
-  app: subsense-motion-detection
+labels:
+- includeSelectors: true
+  pairs:
+    app: subsense-motion-detection
 
 images:
   - name: component_template_img

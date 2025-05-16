@@ -30,8 +30,10 @@ kind: Kustomization
 resources:
   - ../mpf-component-template
 
-commonLabels:
-  app: azure-read-text-detection
+labels:
+- includeSelectors: true
+  pairs:
+    app: azure-read-text-detection
 
 images:
   - name: component_template_img

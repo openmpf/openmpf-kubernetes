@@ -30,8 +30,10 @@ kind: Kustomization
 resources:
   - ../mpf-component-template
 
-commonLabels:
-  app: openmpf-clip-detection
+labels:
+- includeSelectors: true
+  pairs:
+    app: openmpf-clip-detection
 
 images:
   - name: component_template_img

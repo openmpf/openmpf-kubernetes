@@ -30,8 +30,10 @@ kind: Kustomization
 resources:
   - ../mpf-component-template
 
-commonLabels:
-  app: azure-speech-detection
+labels:
+- includeSelectors: true
+  pairs:
+    app: azure-speech-detection
 
 images:
   - name: component_template_img

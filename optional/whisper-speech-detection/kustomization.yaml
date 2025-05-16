@@ -30,8 +30,10 @@ kind: Kustomization
 resources:
   - ../mpf-component-template
 
-commonLabels:
-  app: whisper-speech-detection
+labels:
+- includeSelectors: true
+  pairs:
+    app: whisper-speech-detection
 
 images:
   - name: component_template_img

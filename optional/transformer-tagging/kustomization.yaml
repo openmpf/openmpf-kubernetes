@@ -30,8 +30,10 @@ kind: Kustomization
 resources:
   - ../mpf-component-template
 
-commonLabels:
-  app: transformer-tagging
+labels:
+- includeSelectors: true
+  pairs:
+    app: transformer-tagging
 
 images:
   - name: component_template_img

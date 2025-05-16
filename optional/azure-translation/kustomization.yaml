@@ -30,8 +30,10 @@ kind: Kustomization
 resources:
   - ../mpf-component-template
 
-commonLabels:
-  app: azure-translation
+labels:
+- includeSelectors: true
+  pairs:
+    app: azure-translation
 
 images:
   - name: component_template_img
