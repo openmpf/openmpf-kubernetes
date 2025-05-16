@@ -1,0 +1,113 @@
+#############################################################################
+# NOTICE                                                                    #
+#                                                                           #
+# This software (or technical data) was produced for the U.S. Government    #
+# under contract, and is subject to the Rights in Data-General Clause       #
+# 52.227-14, Alt. IV (DEC 2007).                                            #
+#                                                                           #
+# Copyright 2022 The MITRE Corporation. All Rights Reserved.                #
+#############################################################################
+
+#############################################################################
+# Copyright 2022 The MITRE Corporation                                      #
+#                                                                           #
+# Licensed under the Apache License, Version 2.0 (the "License");           #
+# you may not use this file except in compliance with the License.          #
+# You may obtain a copy of the License at                                   #
+#                                                                           #
+#    http://www.apache.org/licenses/LICENSE-2.0                             #
+#                                                                           #
+# Unless required by applicable law or agreed to in writing, software       #
+# distributed under the License is distributed on an "AS IS" BASIS,         #
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  #
+# See the License for the specific language governing permissions and       #
+# limitations under the License.                                            #
+#############################################################################
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db
+  labels:
+    app: db
+    stack: openmpf
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db
+      stack: openmpf
+  template:
+    metadata:
+      labels:
+        app: db
+        stack: openmpf
+    spec:
+      containers:
+      - name: db
+        image: postgres:alpine
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+          - mountPath: /var/lib/postgresql/data
+            name: openmpf-db-data
+        env:
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_DB
+              name: mpf-secrets
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_USER
+              name: mpf-secrets
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_PASSWORD
+              name: mpf-secrets
+      volumes:
+        - name: openmpf-db-data
+          persistentVolumeClaim:
+            claimName: openmpf-db-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: db
+    stack: openmpf
+  name: db
+spec:
+  ports:
+    - name: "5432"
+      port: 5432
+      targetPort: 5432
+  selector:
+    app: db
+    stack: openmpf
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: openmpf-db-data
+  labels:
+    stack: openmpf
+    persistent: "true"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: db-pdb
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: db
+      stack: openmpf

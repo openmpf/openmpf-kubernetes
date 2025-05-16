@@ -1,0 +1,109 @@
+#############################################################################
+# NOTICE                                                                    #
+#                                                                           #
+# This software (or technical data) was produced for the U.S. Government    #
+# under contract, and is subject to the Rights in Data-General Clause       #
+# 52.227-14, Alt. IV (DEC 2007).                                            #
+#                                                                           #
+# Copyright 2025 The MITRE Corporation. All Rights Reserved.                #
+#############################################################################
+
+#############################################################################
+# Copyright 2025 The MITRE Corporation                                      #
+#                                                                           #
+# Licensed under the Apache License, Version 2.0 (the "License");           #
+# you may not use this file except in compliance with the License.          #
+# You may obtain a copy of the License at                                   #
+#                                                                           #
+#    http://www.apache.org/licenses/LICENSE-2.0                             #
+#                                                                           #
+# Unless required by applicable law or agreed to in writing, software       #
+# distributed under the License is distributed on an "AS IS" BASIS,         #
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  #
+# See the License for the specific language governing permissions and       #
+# limitations under the License.                                            #
+#############################################################################
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clip-detection-server
+  labels:
+    app: clip-detection-server
+    stack: openmpf
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app:  clip-detection-server
+      stack: openmpf
+  template:
+    metadata:
+      labels:
+        app: clip-detection-server
+        stack: openmpf
+    spec:
+      containers:
+        - name: clip-detection-server
+          image: openmpf_clip_detection_server
+          imagePullPolicy: IfNotPresent
+          args:
+            - tritonserver
+            - --model-repository=/models
+            - --strict-model-config=false
+            - --model-control-mode=explicit
+            - --load-model=vit_l_14
+            # - --log-verbose=1 # (optional)
+            - --grpc-infer-allocation-pool-size=16
+          env:
+            # Optionally, limit the GPUs exposed to the server.
+            # At least one GPU is required to run the YOLO TensorRT engine.
+            - name: NVIDIA_VISIBLE_DEVICES
+              value: all
+          volumeMounts:
+            - mountPath: /models
+              name: clip-engine-files
+          # resources:
+          #   limits:
+          #     nvidia.com/gpu: 1
+      volumes:
+        - name: clip-engine-files
+          persistentVolumeClaim:
+            claimName: clip-engine-files
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: clip-detection-server
+    stack: openmpf
+  name: clip-detection-server
+spec:
+  ports:
+    - name: grpc
+      port: 8001
+      targetPort: 8001
+    - name: http-management
+      port: 8000
+      targetPort: 8000
+    # (optional) Prometheus metrics at http://<host>:<this-port>/metrics
+    - name: metrics
+      port: 8002
+      targetPort: 8002
+  selector:
+    app: clip-detection-server
+    stack: openmpf
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: clip-engine-files
+  labels:
+    stack: openmpf
+    persistent: "true"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
